@@ -238,7 +238,7 @@ async def on_message(message):
 
     if message.content.find('-saveas') != -1:
         id = message.author.id
-        dataPath = 'C:\Daniel\program\project\Python\data\\' + str(id)
+        dataPath = '.\data\\' + str(id)
         format = '.jpg'
         if not os.path.isdir(dataPath):
             os.mkdir(dataPath)
@@ -261,7 +261,7 @@ async def on_message(message):
                 await message.channel.send('Art saved successfully! Use -gallery -' + now.strftime('%m') +'/'+now.strftime('%d')+' command to check your saved art!')
     elif message.content.find('-save') != -1:
         id = message.author.id
-        dataPath = 'C:\Daniel\program\project\Python\data\\' + str(id)
+        dataPath = '.\data\\' + str(id)
         format = '.jpg'
         if not os.path.isdir(dataPath):
             os.mkdir(dataPath)
@@ -293,7 +293,7 @@ async def on_message(message):
         else:
             content = 'NULL'
         id = message.author.id
-        dataPath = 'C:\Daniel\program\project\Python\data\\' + str(id)
+        dataPath = '.\data\\' + str(id)
         if not os.path.isdir(dataPath):
             await message.channel.send('You don\'t have any works saved currently, try using -save or -saveas (name)!')
             return
@@ -324,7 +324,7 @@ async def on_message(message):
         else:
             content = 'NULL'
         id = message.author.id
-        dataPath = 'C:\Daniel\program\project\Python\data\\' + str(id)
+        dataPath = '.\data\\' + str(id)
         if not os.path.isdir(dataPath):
             await message.channel.send('You don\'t have any works saved currently, try using -save or -saveas (name)!')
         files = [f for f in os.listdir(dataPath)]
@@ -346,8 +346,8 @@ async def on_message(message):
     if message.content.startswith('-play'):
         await message.channel.send('Welcome to anime master! type **-ready** to start the game! **-end/-stop** to end the game!')
     if message.content.startswith('-end') or message.content.startswith('-stop'):
-        WgameData = open("C:\Daniel\program\project\Python\gameData.txt",'w')
-        RgameData = open("C:\Daniel\program\project\Python\gameData.txt",'r')
+        WgameData = open(".\gameData.txt",'w')
+        RgameData = open(".\gameData.txt",'r')
         data = RgameData.read()
         if data.find(replaceStr) == -1 or len(replaceStr) == 0:
             data = data + '('+str(gamePlayer)+':' + str(pts) + ')'
@@ -361,7 +361,7 @@ async def on_message(message):
         answer = -1
         await message.channel.send('Thanks for playing! :3')
     if message.content.startswith('-ready'):   
-        gameData = open("C:\Daniel\program\project\Python\gameData.txt",'r')    
+        gameData = open(".\gameData.txt",'r')    
         gamePlayer = message.author.id
         gameChannel = message.channel.id
         data = gameData.read()

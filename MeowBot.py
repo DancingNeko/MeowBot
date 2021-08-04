@@ -298,6 +298,7 @@ async def on_message(message):
             await message.channel.send('You don\'t have any works saved currently, try using -save or -saveas (name)!')
             return
         files = [f for f in os.listdir(dataPath)]
+        files.sort()
         count = 0
         for art in files:
             if content != 'NULL' and not art.startswith(content):

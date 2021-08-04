@@ -238,7 +238,7 @@ async def on_message(message):
 
     if message.content.find('-saveas') != -1:
         id = message.author.id
-        dataPath = os.getcwd() + '\data\\' + str(id)
+        dataPath = os.getcwd() + '/data/' + str(id)
         format = '.jpg'
         if not os.path.isdir(dataPath):
             os.mkdir(dataPath)
@@ -255,13 +255,13 @@ async def on_message(message):
                     format = '.png'
                 r = requests.get(attachmentUrl, stream=True)
                 now = datetime.now()
-                imageName = dataPath + '\\' + now.strftime("%m") +'_' + now.strftime("%d") + ' ' + name + format
+                imageName = dataPath + '/' + now.strftime("%m") +'_' + now.strftime("%d") + ' ' + name + format
                 with open(imageName,'wb') as out_file:
                     shutil.copyfileobj(r.raw,out_file)
                 await message.channel.send('Art saved successfully! Use -gallery -' + now.strftime('%m') +'/'+now.strftime('%d')+' command to check your saved art!')
     elif message.content.find('-save') != -1:
         id = message.author.id
-        dataPath = os.getcwd() + '\data\\' + str(id)
+        dataPath = os.getcwd() + '/data/' + str(id)
         format = '.jpg'
         if not os.path.isdir(dataPath):
             os.mkdir(dataPath)
@@ -277,7 +277,7 @@ async def on_message(message):
                 if attachmentUrl.find('png') != -1:
                     format = '.png'
                 r = requests.get(attachmentUrl, stream=True)
-                imageName = dataPath + '\\' + now.strftime("%m") +'_' + now.strftime("%d") + ' ' + name + format
+                imageName = dataPath + '/' + now.strftime("%m") +'_' + now.strftime("%d") + ' ' + name + format
                 with open(imageName,'wb') as out_file:
                     shutil.copyfileobj(r.raw,out_file)
                 await message.channel.send('Art saved successfully! Use -gallery -' + now.strftime('%m') +'/'+now.strftime('%d')+' command to check your saved art!')
@@ -293,7 +293,7 @@ async def on_message(message):
         else:
             content = 'NULL'
         id = message.author.id
-        dataPath = os.getcwd() + '\data\\' + str(id)
+        dataPath = os.getcwd() + '/data/' + str(id)
         if not os.path.isdir(dataPath):
             await message.channel.send('You don\'t have any works saved currently, try using -save or -saveas (name)!')
             return
@@ -306,7 +306,7 @@ async def on_message(message):
             date = art[0:blankIndex].replace('_','/')
             name = art[blankIndex+1:len(art)-4]
             await message.channel.send('date: ' + date + ' name: ' + name)
-            with open(dataPath+'\\' + art,'rb') as f:
+            with open(dataPath+'/' + art,'rb') as f:
                 picture = discord.File(f)
                 await message.channel.send(file=picture)
                 count += 1
@@ -324,14 +324,14 @@ async def on_message(message):
         else:
             content = 'NULL'
         id = message.author.id
-        dataPath = os.getcwd() + '\data\\' + str(id)
+        dataPath = os.getcwd() + '/data/' + str(id)
         if not os.path.isdir(dataPath):
             await message.channel.send('You don\'t have any works saved currently, try using -save or -saveas (name)!')
         files = [f for f in os.listdir(dataPath)]
         count = 0
         for art in files:
             if content != 'NULL' and art.startswith(content):
-                os.remove(dataPath + '\\' + art)
+                os.remove(dataPath + '/' + art)
                 count+=1
         await message.channel.send(str(count) + ' arts successfully removed!')
 
@@ -346,8 +346,8 @@ async def on_message(message):
     if message.content.startswith('-play'):
         await message.channel.send('Welcome to anime master! type **-ready** to start the game! **-end/-stop** to end the game!')
     if message.content.startswith('-end') or message.content.startswith('-stop'):
-        WgameData = open(os.getcwd() + "\gameData.txt",'w')
-        RgameData = open(os.getcwd() + "\gameData.txt",'r')
+        WgameData = open(os.getcwd() + "/gameData.txt",'w')
+        RgameData = open(os.getcwd() + "/gameData.txt",'r')
         data = RgameData.read()
         if data.find(replaceStr) == -1 or len(replaceStr) == 0:
             data = data + '('+str(gamePlayer)+':' + str(pts) + ')'
@@ -361,7 +361,7 @@ async def on_message(message):
         answer = -1
         await message.channel.send('Thanks for playing! :3')
     if message.content.startswith('-ready'):   
-        gameData = open(os.getcwd() + "\gameData.txt",'r')    
+        gameData = open(os.getcwd() + "/gameData.txt",'r')    
         gamePlayer = message.author.id
         gameChannel = message.channel.id
         data = gameData.read()

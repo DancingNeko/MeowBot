@@ -9,6 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 import shutil
+from ImageConvert import Image2Braille
 
 intents = discord.Intents().all()
 client= commands.Bot(command_prefix="$", intents=intents)
@@ -235,6 +236,38 @@ async def on_message(message):
             if(img['src'].find('images-wixmp') != -1):
                 await message.channel.send(img['src'])
                 break
+
+    if message.content.find('-braille') != -1:
+        sensitivity = 0.9
+        width = 28
+        if message.content[2:].find('-') != -1:
+            parIndex = message.content[2:].find('-') + 1 + 2
+            num = ''
+            while parIndex < len(message.content) and message.content[parIndex].isdigit():
+                num+=message.content[parIndex]
+                parIndex += 1
+            sensitivity = int(num) / 10
+        if message.content[2:].find('#') != -1:
+            parIndex = message.content[2:].find('#') + 1 + 2
+            num = ''
+            while parIndex < len(message.content) and message.content[parIndex].isdigit():
+                num+=message.content[parIndex]
+                parIndex += 1
+            width = int(num)
+        attachmentUrl = ''
+        try:
+            attachmentUrl = message.attachments[0].url
+        except IndexError:
+            await message.channel.send('No attachments found meow!')
+        else:
+            if attachmentUrl[0:26] == 'https://cdn.discordapp.com':
+                chrArr = Image2Braille.convert(width, sensitivity, attachmentUrl)
+            await message.channel.send('Sensitivity: ' + str(sensitivity*10) + '\nWitdth: ' + str(width))
+            chrStr = ''
+            for chr in chrArr:
+                chrStr += chr + '\n'
+            await message.channel.send(chrStr)
+
 
     if message.content.find('-saveas') != -1:
         id = message.author.id

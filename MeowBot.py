@@ -257,6 +257,13 @@ async def on_message(message):
         off = False
         await message.channel.send('Hello Meow!')
 
+    if message.content.startswith('-end puzzle'):
+        if(puzzleMessage != None):
+            await puzzleMessage.delete()
+        puzzle = None
+        puzzleMessage = None
+
+
     if off:
         return
 
@@ -489,7 +496,7 @@ async def on_message(message):
         return
     if message.content.startswith('-play'):
         await message.channel.send('Welcome to anime master! type **-ready** to start the game! **-end/-stop** to end the game!')
-    if message.content.startswith('-end') or message.content.startswith('-stop'):
+    if message.content.startswith('-end game') or message.content.startswith('-stop game'):
         WgameData = open(os.getcwd() + "/gameData.txt",'w')
         RgameData = open(os.getcwd() + "/gameData.txt",'r')
         data = RgameData.read()

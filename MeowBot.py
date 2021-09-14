@@ -149,7 +149,7 @@ class TilePuzzle:
 
     def translate(num):
         if num == 0:
-            return ":zero:"
+            return ":eyes:"
         if num == 1:
             return ":one:"
         if num == 2:

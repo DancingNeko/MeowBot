@@ -102,6 +102,79 @@ class Compare:
         return score
 
 
+class TilePuzzle:
+    puzzle = [1,2,3,4,5,6,7,8,0]
+    def __init__(self) -> None:
+        TilePuzzle.shuffle(self)
+
+    def swap(puzzle,a,b):
+        temp = puzzle[a]
+        puzzle[a] = puzzle[b]
+        puzzle[b] = temp
+
+
+    def shuffle(self):
+        for x in range(0,1000000):
+            TilePuzzle.move(self,(int)(4*random.random()))
+
+    def move(self,dir):
+        sliderID = self.puzzle.index(0)
+        if dir == 0:
+            if sliderID // 3 == 0:
+                return
+            else:
+                TilePuzzle.swap(self.puzzle,sliderID,sliderID-3)
+        if dir == 2:
+            if sliderID // 3 == 2:
+                return
+            else:
+                TilePuzzle.swap(self.puzzle,sliderID,sliderID+3)
+        if dir == 1:
+            if sliderID % 3 == 2:
+                return
+            else:
+                TilePuzzle.swap(self.puzzle,sliderID,sliderID+1)
+        if dir == 3:
+            if sliderID % 3 == 0:
+                return
+            else:
+                TilePuzzle.swap(self.puzzle,sliderID,sliderID-1)
+
+    def checkComplete(self):
+        for i in range(0,9):
+            if(i == 8):
+                return True
+            if(self.puzzle[i]!=i+1):
+                return False
+
+    def translate(num):
+        if num == 0:
+            return ":zero:"
+        if num == 1:
+            return ":one:"
+        if num == 2:
+            return ":two:"
+        if num == 3:
+            return ":three:"
+        if num == 4:
+            return ":four:"
+        if num == 5:
+            return ":five:"
+        if num == 6:
+            return ":six:"
+        if num == 7:
+            return ":seven:"
+        if num == 8:
+            return ":eight:"
+
+    def __str__(self) -> str:
+        str = ""
+        for i in range(0,9):
+            str += TilePuzzle.translate(self.puzzle[i])
+            if i%3 == 2:
+                str += "\n"
+        return "Tile Puzzle:\n"+str
+
 
 
 
@@ -124,6 +197,8 @@ gameChannel = 0
 answer = -1
 pts = 0
 replaceStr = ''
+puzzleMessage = None
+puzzle = None
 
 def attachIsImage(msgAttach):
     url = msgAttach.url
@@ -140,12 +215,42 @@ async def on_member_join(ctx):
     await ctx.add_roles(role)
 
 @client.event
+async def on_reaction_add(reaction,user):
+    global puzzle
+    global puzzleMessage
+    if(reaction.message == puzzleMessage and user!=client.user):
+        await puzzleMessage.remove_reaction(reaction.emoji,user)
+        if reaction.emoji == '⬆️':
+            puzzle.move(0)
+        if reaction.emoji == '⬇️':
+            puzzle.move(2)
+        if reaction.emoji == '➡️':
+            puzzle.move(1)
+        if reaction.emoji =='⬅️':
+            puzzle.move(3)
+        await puzzleMessage.edit(content = str(puzzle))
+        if(puzzle.checkComplete()):
+            puzzleMessage = None
+            puzzle = None
+            await reaction.message.channel.send("Congrats! You complete the puzzle!")
+    
+
+
+@client.event
 async def on_message(message):
     global answer
     global off
     global gameChannel
     global gamePlayer 
+    global puzzle
+    global puzzleMessage
     if message.author == client.user:
+        if(message.content.startswith("Tile Puzzle:")):
+            puzzleMessage = message
+            await message.add_reaction('⬆️')
+            await message.add_reaction('⬇️')
+            await message.add_reaction('⬅️')
+            await message.add_reaction('➡️')
         return
     
     if message.content.startswith('-restart'):
@@ -236,6 +341,11 @@ async def on_message(message):
             if(img['src'].find('images-wixmp') != -1):
                 await message.channel.send(img['src'])
                 break
+
+    if message.content.startswith('-puzzle'):
+        puzzle = TilePuzzle()
+        puzzle.shuffle()
+        await message.channel.send(str(puzzle))
 
     if message.content.find('-braille') != -1:
         sensitivity = 0.9
